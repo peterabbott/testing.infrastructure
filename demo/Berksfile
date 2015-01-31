@@ -1,0 +1,9 @@
+source 'https://supermarket.getchef.com'
+
+# core cookbooks
+cookbook 'java'
+cookbook 'mongodb'
+
+# environment variations
+cookbook 'apt'
+cookbook 'yum'
