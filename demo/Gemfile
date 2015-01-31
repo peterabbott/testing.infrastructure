@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.1.4'
 group :lint do
   gem 'foodcritic', '~> 3.0'
   gem 'rubocop', '~> 0.18'

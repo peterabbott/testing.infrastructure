@@ -1,6 +1,17 @@
 Infrastructure always has a habit of being the last piece of the deployment puzzle. It is always the part that ends up taking much longer than expected, not matter how many times you've done it before.
 
-/quote Your infrastructure deserves tests too.
+{{#data title="Test Kitchen"
+
+definition="Your infrastructure deserves tests too."
+
+source="kitchen.ci"
+
+url="https://kitchen.ci/"
+}}
+{{> definition}}
+{{/data}}
+
+
 
 We have automated testing for all other areas of software development lifecycle, why not Infrastrucutre?
 
@@ -15,9 +26,25 @@ This is particularly useful if you want to verify a setup against different OS a
 The configuration Test Kitchen is to break the configuration into Driver, Provisioner, Platform and Tests.
 
 
-````
-Test Kitchen file 
-````
+In this simple, running test kitchen would launch an Ubunu 12 and Centos 6.4 instance and install Apache2 using the Chef cookbook and its defaults. 
+
+```
+---
+driver:
+  name: vagrant
+provisioner:
+  name: chef_solo
+platforms:
+  - name: ubuntu-12.04
+  - name: centos-6.4
+suites:
+  - name: default
+    run_list:
+    - "recipe[apache2]"
+    attributes:
+ 
+``` 
+
 
 The Driver section allows you define what underlying infrastructure you are going to use to launch your environment. The default is Vagrant and VirtualBox, but others like AWS EC2, Docker and Digital Ocean are supported.
 
@@ -32,14 +59,29 @@ Finally the test section is where the value comes in to play. This is where you 
 
 **Putting it all Together** 
 
+Normally if I were setting up platform, I'd wrap all the recipies into a single wrapper cookbook. This is also known as the [Environment Cookbook Pattern](http://blog.vialstudios.com/the-environment-cookbook-pattern/). While you can use Chef Roles and Environments to manage recipes, I find it much cleaner to use a single wrapper cookbook to define a stack that is used by an application. This approach also makes it far easier to version.
+
+For this case, the recipe run list is just going to be defined in the Test Kitchen config to make it easier to follow. 
+
+My preference is to use Docker to test as it is much quicker to spin up instances as compared with Vagrant (and VirtualBox).
 
 
-Cookbook Environment Pattern
+*Test Kitchen Config*
+
+```
+
+
+```
+
+
 
 Demo application
 
-BATS test Versus.
+BATS test versus Serverspec.
 
+
+
+The next step would be to feed this into a tool like [Packer](https://packer.io) which can then generate you VM images to be used within your infrastructure.
 
 
 
