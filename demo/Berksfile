@@ -4,6 +4,7 @@ source 'https://supermarket.getchef.com'
 cookbook 'apache2'
 cookbook 'java'
 cookbook 'mongodb'
+cookbook 'jetty'
 
 # environment variations
 cookbook 'apt'
