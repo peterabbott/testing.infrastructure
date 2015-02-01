@@ -4,7 +4,9 @@ source 'https://supermarket.getchef.com'
 cookbook 'apache2'
 cookbook 'java'
 cookbook 'mongodb'
-cookbook 'jetty'
+
+# bug with tomcat cookbook 
+cookbook 'tomcat', git: 'https://github.com/peterabbott/tomcat.git'
 
 # environment variations
 cookbook 'apt'

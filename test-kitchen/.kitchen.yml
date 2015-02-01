@@ -1,0 +1,44 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+platforms:
+  - name: ubuntu-14.04
+    run_list:
+    - "recipe[apt]"
+    - "recipe[java]" 
+    - "recipe[mongodb]"
+    - "recipe[tomcat]"
+    - "recipe[apache2]"
+  - name: centos-6.4
+    driver_config:
+      provision_command:
+        - yum install -y tar curl
+    run_list:
+    - "recipe[yum]"
+    - "recipe[java]"
+    - "recipe[mongodb]"
+    - "recipe[tomcat]"
+    - "recipe[apache2]"
+
+suites:
+  - name: default
+    attributes:
+      java:
+        install_flavor: 'oracle'
+        jdk_version: '7'
+        oracle:
+          accept_oracle_download_terms: true      
+      tomcat:
+        base_version: 7
+  - name: java-8
+    attributes:
+      java:
+        install_flavor: 'oracle'
+        jdk_version: '8'
+        oracle:
+          accept_oracle_download_terms: true      
+      tomcat:
+        base_version: 7
