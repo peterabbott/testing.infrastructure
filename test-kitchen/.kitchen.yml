@@ -9,9 +9,9 @@ platforms:
     run_list:
     - "recipe[apt]"
     - "recipe[java]" 
-    - "recipe[mongodb]"
+#    - "recipe[mongodb]"
     - "recipe[tomcat]"
-    - "recipe[apache2]"
+#    - "recipe[apache2]"
   - name: centos-6.4
     driver_config:
       provision_command:

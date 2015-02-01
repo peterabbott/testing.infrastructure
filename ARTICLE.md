@@ -13,11 +13,11 @@ url="https://kitchen.ci/"
 
 
 
-We have automated testing for all other areas of software development lifecycle, why not Infrastrucutre?
+We have automated testing for software development lifecycle. So why not Infrastrucutre? 
 
-With the emmergence of 'Infrastructure as Code' the lines of responsibility around configuring infrastructure become more blurred. We need to be able to test a change before it has a chance to bring an environment down, be proactive not reactive.
+With the emmergence of 'Infrastructure as Code' the responsibility of configuring insfrastructure are crossing over to developers, not just the domain of System Administrator. This makes the need to be able to test a change in isolation even more important, before you have the change of brining down an entire environment. 
 
-This is where a tool like [Test Kitchen](http://kitchen.ci/) comes in. It is the glue between the provisioning tool of choice: Chef, Puppet, Ansible, etc; and the infrastruction being provisioned, AWS, Docker, VirtualBox, etc. 
+This is where a tool like [Test Kitchen](http://kitchen.ci/) comes in. It is the glue between the provisioning tools like Chef, Puppet, Ansible; the infrastruction being provisioned like AWS, Docker, VirtualBox; and the tests to validate the setup is correct.
 
 The simple concept is that Test Kichen allows you to execute a convergance on a  given platform(s) and then execute a suite of tests to verify the environment has been setup as expected. 
 
@@ -26,7 +26,7 @@ This is particularly useful if you want to verify a setup against different OS a
 The configuration Test Kitchen is to break the configuration into Driver, Provisioner, Platform and Tests.
 
 
-In this simple, running test kitchen would launch an Ubunu 12 and using the *apt* cookbook run an `apt update`. 
+In this simple, running test kitchen would launch an Ubunu 14 and using the *apt* cookbook run an `apt update`. 
 
 ``` yaml
 ---
@@ -35,7 +35,7 @@ driver:
 provisioner:
   name: chef_solo
 platforms:
-  - name: ubuntu-12.04
+  - name: ubuntu-14.04
 suites:
   - name: default
     run_list:
@@ -76,6 +76,13 @@ provisioner:
   name: chef_solo
 platforms:
   - name: ubuntu-12.04
+    run_list:
+    - "recipe[apt]"
+    - "recipe[java]" 
+    - "recipe[mongodb]"
+    - "recipe[jetty]"
+    - "recipe[tomcat]"
+  - name: ubuntu-14.04
     run_list:
     - "recipe[apt]"
     - "recipe[java]" 
