@@ -26,9 +26,9 @@ This is particularly useful if you want to verify a setup against different OS a
 The configuration Test Kitchen is to break the configuration into Driver, Provisioner, Platform and Tests.
 
 
-In this simple, running test kitchen would launch an Ubunu 12 and Centos 6.4 instance and install Apache2 using the Chef cookbook and its defaults. 
+In this simple, running test kitchen would launch an Ubunu 12 and using the *apt* cookbook run an `apt update`. 
 
-```
+``` yaml
 ---
 driver:
   name: vagrant
@@ -36,11 +36,10 @@ provisioner:
   name: chef_solo
 platforms:
   - name: ubuntu-12.04
-  - name: centos-6.4
 suites:
   - name: default
     run_list:
-    - "recipe[apache2]"
+    - "recipe[apt]"
     attributes:
  
 ``` 
@@ -59,33 +58,175 @@ Finally the test section is where the value comes in to play. This is where you 
 
 **Putting it all Together** 
 
-Normally if I were setting up platform, I'd wrap all the recipies into a single wrapper cookbook. This is also known as the [Environment Cookbook Pattern](http://blog.vialstudios.com/the-environment-cookbook-pattern/). While you can use Chef Roles and Environments to manage recipes, I find it much cleaner to use a single wrapper cookbook to define a stack that is used by an application. This approach also makes it far easier to version.
+Normally if I were setting up platform, I'd wrap all the recipies into a single wrapper cookbook. This is also known as the [Environment Cookbook Pattern](http://blog.vialstudios.com/the-environment-cookbook-pattern/). While you can use Chef Roles and Environments to manage recipes, I find it much cleaner to use a single wrapper cookbook to define a stack that is used by an application. This approach also makes it far easier to version and feed into different tools (for example Test Kitchen, Packer, Chef Server), instead of maintaining different configuration files for each setup.
 
-For this case, the recipe run list is just going to be defined in the Test Kitchen config to make it easier to follow. 
+For this example, the recipe run list and chef configuration are defined in the Test Kitchen config to make it easier to follow. 
 
-My preference is to use Docker to test as it is much quicker to spin up instances as compared with Vagrant (and VirtualBox).
+I tend to use Docker to test with as it is much quicker to spin up instances as compared with the default Vagrant and VirtualBox.
 
 
-*Test Kitchen Config*
+*Sample Test Kitchen Config*
+
+``` yaml
+---
+driver:
+  name: docker 
+
+provisioner:
+  name: chef_solo
+platforms:
+  - name: ubuntu-12.04
+    run_list:
+    - "recipe[apt]"
+    - "recipe[java]" 
+    - "recipe[mongodb]"
+    - "recipe[jetty]"
+    - "recipe[tomcat]"
+  - name: centos-6.4
+    run_list:
+    - "recipe[yum]"
+    - "recipe[java]"
+    - "recipe[mongodb]"
+    - "recipe[tomcat]"
+    - "recipe[apache]"
+
+suites:
+  - name: default
+    attributes:
+      java:
+        install_flavor: openjdk 
+        jdk_version: 7
+
+```
+
+So now we are able to run Test Kitchen and verify that each of the Chef recipes will execute and converge successfully. But do we actually know that everything is in place and will run once let loose into the wild?
+
+This is where we need to write some tests to verify that everything is in place. We should test things like versions installed, services running, files in the correct place. 
+
+We have all been caught out by a Gem or Cookbook being updated and then having to spend hours trying to figure out why things just stopped working. The update to the Apache2 cookbook from the default Apache 2.2 to 2.4 is a prime example. With infrastrucuture tests in place, we can pick up these changes sooner in the deployment lifecycle.
+
+The most common tests are [Bats](https://github.com/sstephenson/bats) and [Serverspec](http://serverspec.org/). Bats tests (Bash Tests) are probably easier to get to grips with if just writing simple tests. Serverspec allows you to write more complex test and is better at handling cross-platform tests.
+
+A simple Bats testing to verify Java installed.
+
+``` bash
+@test "that java is install" {
+	run test -f /usr/bin/java 
+	[ "$status" -eq 0 ]
+}
+
+@test "that java libs is installed" {
+	run test -d /usr/lib/jvm 
+	[ "$status" -eq 0 ]
+}
+```
+
+An example Serverspec Test to verify Java version and required services are installed.
+
+``` ruby
+require 'serverspec'
+
+set :backend, :exec
+
+describe command('java -version'), :if => os[:family] == 'redhat' do
+  its(:stdout) { should match /1.7.0_75/ }
+end
+
+describe command('java -version'), :if => os[:family] == 'ubuntu' do
+  its(:stdout) { should match /1.7.0_65/ }
+end
+
+describe service('tomcat7')
+  it { should be_installed }
+  it { should be_running }
+end
+
+describe service('httpd'), :if => os[:family] == 'redhat' do
+  it { should be_installed }
+  it { should be_running }
+end
+
+describe service('apache2'), :if => os[:family] == 'ubuntu' do
+  it { should be_installed }
+  it { should be_running }
+end
+
 
 ```
 
 
+If you were to go down the route of Immutable Infrastructure, then you would start to add application tests to verify that the application is deployed and can run. 
+
+**Running Test Kitchen**
+
+There are two key phases to Test Kichen, converge and verify. 
+
+To start with you can see what tests are available by running `kitchen list`. This will list all the combinations of platforms and tests configured.
+
+``` console
+$ kitchen list
+Instance             Driver  Provisioner  Last Action
+default-ubuntu-1204  Docker  ChefSolo     Created
+default-centos-64    Docker  ChefSolo     <Not Created>
+
 ```
 
+You can run each phase of Test Kitchen seperately, but running `kitchen test` will create a container, run the convergence, run the tests and then tear everything down. 
 
+``` console
+$ kitchen test ubuntu
+///... Lots of output while the tests runs 
+$ kitchen list
+Instance             Driver  Provisioner  Last Action
+default-ubuntu-1204  Docker  ChefSolo     Converged
+default-centos-64    Docker  ChefSolo     <Not Created>
+
+```
+
+As the example above shows, only the Ubuntu instances have been converged. Test Kitchen can take multiple styles of inputs, you could run all tests, tests only against Ubuntu or only specific test suite.
+
+``` bash
+kitchen test  -  run all test suites against all platforms
+kitchen test ubuntu  -  run all test suites only against Ubuntu 
+kitchen test default  -  run default test suite against all platforms
+kitchen test default-ubuntu-1204  -  run default test suite against Ubuntu 12.04
+``` 
+
+During testing you might encounter times where tests fail and you can't figure out why. It is possible to login to the VM's created as part of the converge and poke around to see what is going on. `kitchen login default-ubuntu-1204` would help you login quickly into the running instance without having to lookup with SSH port is exposed. 
+
+
+** What's Next? **
+
+After you have Test Kitchen in place you could then setup a tool to like [Packer](https://packer.io) to generate your infrastructure VM's with the confidence it will work. 
+
+All this together would put you in a good place to travel down the full Continuous Delivery road.
+
+
+This example is also availble on [GitHub](http://github.com/peterabbott/testing.infrastucture) to try for yourself.
+
+
+
+
+
+```
+kitchen converge - provision your environemnt
+kitchen verify - 
+kitchen test
+kitchen destroy
+
+```
 
 Demo application
 
 BATS test versus Serverspec.
 
+kitchen list
+kitchen converge
+kitchen verify
+kitchen test
+kitchen destroy
 
 
-The next step would be to feed this into a tool like [Packer](https://packer.io) which can then generate you VM images to be used within your infrastructure.
-
-
-
-This example is also availble on [GitHub](http://github.com/peterabbott/testing.infrastucture) to try for yourself.
 
 
 
