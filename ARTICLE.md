@@ -67,7 +67,7 @@ I tend to use Docker to test with as it is much quicker to spin up instances as 
 
 *Sample Test Kitchen Config*
 
-``` yaml
+``` 
 ---
 driver:
   name: docker 
