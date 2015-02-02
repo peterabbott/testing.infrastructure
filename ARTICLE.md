@@ -28,7 +28,7 @@ The configuration Test Kitchen is to break the configuration into Driver, Provis
 
 In this simple, running test kitchen would launch an Ubunu 14 and using the *apt* cookbook run an `apt update`. 
 
-``` yaml
+``` 
 ---
 driver:
   name: vagrant
