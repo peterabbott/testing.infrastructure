@@ -215,6 +215,10 @@ This example is also availble on [GitHub](http://github.com/peterabbott/testing.
 
 
 
+
+
+---- NOTES
+
 ```
 kitchen converge - provision your environemnt
 kitchen verify - 
