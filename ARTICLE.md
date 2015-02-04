@@ -85,16 +85,16 @@ platforms:
   - name: ubuntu-14.04
     run_list:
     - "recipe[apt]"
-    - "recipe[java]" 
     - "recipe[mongodb]"
     - "recipe[jetty]"
-    - "recipe[tomcat]"
+    - "recipe[tomcat]"    
+    - "recipe[java]" 
   - name: centos-6.4
     run_list:
     - "recipe[yum]"
-    - "recipe[java]"
     - "recipe[mongodb]"
     - "recipe[tomcat]"
+    - "recipe[java]"
     - "recipe[apache]"
 
 suites:
@@ -108,9 +108,11 @@ suites:
 
 So now we are able to run Test Kitchen and verify that each of the Chef recipes will execute and converge successfully. But do we actually know that everything is in place and will run once let loose into the wild?
 
-This is where we need to write some tests to verify that everything is in place. We should test things like versions installed, services running, files in the correct place. 
+This is where we need to write some tests to verify that everything is in place. We should test things like versions installed, services running, files in the correct place. Tests don't lie.
 
-We have all been caught out by a Gem or Cookbook being updated and then having to spend hours trying to figure out why things just stopped working. The update to the Apache2 cookbook from the default Apache 2.2 to 2.4 is a prime example. With infrastrucuture tests in place, we can pick up these changes sooner in the deployment lifecycle.
+We have all been caught out by a Gem or Cookbook being updated and then having to spend hours trying to figure out why things just stopped working. The update to the Apache cookbook from the default Apache 2.2 to 2.4 is a prime example. Even in putting together a sample for this article I found a couple of bugs and unexcepted behaviours in some of the cookbooks I was using. 
+
+With infrastrucuture tests in place, we can pick up these changes sooner in the deployment lifecycle then getting caught with an broken environment that others are reliant on.
 
 The most common tests are [Bats](https://github.com/sstephenson/bats) and [Serverspec](http://serverspec.org/). Bats tests (Bash Tests) are probably easier to get to grips with if just writing simple tests. Serverspec allows you to write more complex test and is better at handling cross-platform tests.
 
@@ -199,7 +201,9 @@ kitchen test default  -  run default test suite against all platforms
 kitchen test default-ubuntu-1204  -  run default test suite against Ubuntu 12.04
 ``` 
 
-During testing you might encounter times where tests fail and you can't figure out why. It is possible to login to the VM's created as part of the converge and poke around to see what is going on. `kitchen login default-ubuntu-1204` would help you login quickly into the running instance without having to lookup with SSH port is exposed. 
+During testing you might encounter times where tests fail and you can't figure out why. 
+
+It is possible to login to the VM's created as part of the converge and poke around to see what is going on. `kitchen login default-ubuntu-1204` would help you login quickly into the running instance without having to lookup with SSH port is exposed. 
 
 
 ** What's Next? **
@@ -208,8 +212,9 @@ After you have Test Kitchen in place you could then setup a tool to like [Packer
 
 All this together would put you in a good place to travel down the full Continuous Delivery road.
 
-
 This example is also availble on [GitHub](http://github.com/peterabbott/testing.infrastucture) to try for yourself.
+
+
 
 
 
