@@ -1,7 +1,7 @@
 source 'https://supermarket.getchef.com'
 
 # core cookbooks
-cookbook 'apache2'
+cookbook 'apache2', git: "https://github.com/peterabbott/apache2-cookbook.git", branch: "bugfix/service-start"
 cookbook 'java'
 cookbook 'mongodb'
 

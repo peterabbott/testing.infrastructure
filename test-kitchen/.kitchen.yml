@@ -1,34 +1,33 @@
 ---
 driver:
-  name: vagrant
-
+  name: docker # switch between docker and vagrant
+  cap_add: SYS_PTRACE
 provisioner:
   name: chef_solo
 platforms:
   - name: ubuntu-14.04
     run_list:
     - "recipe[apt]"
-    - "recipe[java]" 
-#    - "recipe[mongodb]"
+    - "recipe[apache2]"
+    - "recipe[mongodb]"
     - "recipe[tomcat]"
-#    - "recipe[apache2]"
-  - name: centos-6.4
+    - "recipe[java]" 
+  - name: centos-6.5
     driver_config:
       provision_command:
         - yum install -y tar curl
     run_list:
     - "recipe[yum]"
-    - "recipe[java]"
+    - "recipe[apache2]"
     - "recipe[mongodb]"
     - "recipe[tomcat]"
-    - "recipe[apache2]"
-
+    - "recipe[java]"
 suites:
   - name: default
     attributes:
       java:
-        install_flavor: 'oracle'
-        jdk_version: '7'
+        install_flavor: oracle
+        jdk_version: "7"
         oracle:
           accept_oracle_download_terms: true      
       tomcat:
@@ -36,9 +35,11 @@ suites:
   - name: java-8
     attributes:
       java:
-        install_flavor: 'oracle'
-        jdk_version: '8'
+        install_flavor: oracle
+        jdk_version: "8"
+        set_etc_environment: true
+        jdk:
         oracle:
-          accept_oracle_download_terms: true      
+          accept_oracle_download_terms: true
       tomcat:
         base_version: 7
