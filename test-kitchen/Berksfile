@@ -6,7 +6,7 @@ cookbook 'java'
 cookbook 'mongodb'
 
 # bug with tomcat cookbook 
-cookbook 'tomcat', git: 'https://github.com/peterabbott/tomcat.git'
+cookbook 'tomcat', git: 'https://github.com/peterabbott/tomcat.git', branch: 'bugfix/centos-tomcat7'
 
 # environment variations
 cookbook 'apt'

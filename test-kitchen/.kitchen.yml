@@ -12,6 +12,13 @@ platforms:
     - "recipe[mongodb]"
     - "recipe[tomcat]"
     - "recipe[java]" 
+  - name: ubuntu-12.04
+    run_list:
+    - "recipe[apt]"
+    - "recipe[apache2]"
+    - "recipe[mongodb]"
+    - "recipe[tomcat]"
+    - "recipe[java]" 
   - name: centos-6.5
     driver_config:
       provision_command:
@@ -24,7 +31,12 @@ platforms:
     - "recipe[java]"
 suites:
   - name: default
+    excludes: 
+      - centos-6.5
     attributes:
+      yum:
+        epel-testing:
+          enabled: true
       java:
         install_flavor: oracle
         jdk_version: "7"
@@ -32,8 +44,14 @@ suites:
           accept_oracle_download_terms: true      
       tomcat:
         base_version: 7
+        deploy_manager_apps: false
   - name: java-8
+    excludes: 
+      - centos-6.5
     attributes:
+      yum:
+        epel-testing:
+          enabled: true
       java:
         install_flavor: oracle
         jdk_version: "8"
@@ -43,3 +61,5 @@ suites:
           accept_oracle_download_terms: true
       tomcat:
         base_version: 7
+        deploy_manager_apps: false
+
