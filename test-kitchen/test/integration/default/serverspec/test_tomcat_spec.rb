@@ -7,5 +7,5 @@ describe service('tomcat') do
 end
 
 describe command('curl --silent -o /dev/null  -w "%{response_code}" localhost:8080/manager/status') do
- its(:stdout) { should match /401/ }
+ its(:stdout) { should match /404/ }
 end
