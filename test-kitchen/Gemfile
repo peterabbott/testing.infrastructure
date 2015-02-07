@@ -24,7 +24,7 @@ end
 
 group :kitchen_docker do
 #  gem 'kitchen-docker', '~> 1.7.0'
-  gem 'kitchen-docker', :path => '/Users/peter.abbott/Documents/work/projects/peterabbott/kitchen-docker' 
+  gem 'kitchen-docker', :git => 'https://github.com/peterabbott/kitchen-docker.git' 
 end
 
 group :ci do
