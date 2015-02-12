@@ -34,7 +34,7 @@ suites:
       - "recipe[tomcat]"
       - "recipe[java]" 
     excludes: 
-      - centos-6.5
+      - centos-7
     attributes:
       yum:
         epel-testing:
@@ -54,7 +54,7 @@ suites:
       - "recipe[tomcat]"
       - "recipe[java]" 
     excludes: 
-      - centos-6.5
+     - centos-7
     attributes:
       yum:
         epel-testing:
