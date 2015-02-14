@@ -21,7 +21,7 @@ This is where a tool like [Test Kitchen](http://kitchen.ci/) comes in. It is the
 
 The simple concept is that Test Kichen allows you to execute a convergance on a  given platform(s) and then execute a suite of tests to verify the environment has been setup as expected. 
 
-This is particularly useful if you want to verify a setup against different OS and/or application versions. This can even be setup as part of your Continuous Integration and/or Delivery Pipelines. It also feeds nicely into the concept of [Immutable Infrastructure](http://www.thoughtworks.com/insights/blog/rethinking-building-cloud-part-4-immutable-servers), which I am a big fan of, but that is a whole other discussion.
+This is particularly useful if you want to verify a setup against different OS and/or application versions. This can even be setup as part of your Continuous Integration and/or Delivery Pipelines. It also feeds nicely into the concept of [Immutable Infrastructure](http://www.thoughtworks.com/insights/blog/rethinking-building-cloud-part-4-immutable-servers), which I am a big fan of, but that is a discussion for another time.
 
 The configuration Test Kitchen is to break the configuration into Driver, Provisioner, Platform and Tests.
 
