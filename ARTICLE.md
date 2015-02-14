@@ -192,7 +192,7 @@ default-centos-64    Docker  ChefSolo     <Not Created>
 
 ```
 
-As the example above shows, only the Ubuntu instances have been converged. Test Kitchen can take multiple styles of inputs, you could run all tests, tests only against Ubuntu or only specific test suite.
+As the example above shows, only the Ubuntu instances have been converged. Test Kitchen can take multiple formats of inputs, you could run all tests, tests only against Ubuntu or only specific test suite.
 
 ``` bash
 kitchen test  -  run all test suites against all platforms
@@ -201,10 +201,13 @@ kitchen test default  -  run default test suite against all platforms
 kitchen test default-ubuntu-1204  -  run default test suite against Ubuntu 12.04
 ``` 
 
-During testing you might encounter times where tests fail and you can't figure out why. 
+During testing you might encounter times where tests fail and you can't figure out why. The staged approach of Test Kitchen allows you to runs the convergence and verification stages separately. What this means is that you can login to the generated and (partially) provisioned Virtual Machine to have a poke around. This is particularly useful during initial setup, it allows you to look around and see how things are setup whithout breaking any "real" environments.
 
-It is possible to login to the VM's created as part of the converge and poke around to see what is going on. `kitchen login default-ubuntu-1204` would help you login quickly into the running instance without having to lookup with SSH port is exposed. 
+To make connecting to a Virtual Machine, Test Kitchen provides a login command so you don't have to worry about figuring out ports and ssh keys, it remembers all that for you.
 
+So as we can Test Kitchen can provide a really easy mechanism to test your infrastructure, in particular testing the infrastructure after it has been through your provisioning tool of choice. You spin up or updated environments safe in the knowledge that you wont bring down an environment and have angry users blaming your for a lost environments or an annoyed support team that you broke one of their servers. 
+
+At the very least testing the convergence of any cookbooks you write should always come with a basic Test Kitchen config to verify the cookbook itself. TDD for Infrastructure.
 
 ** What's Next? **
 
@@ -212,13 +215,6 @@ After you have Test Kitchen in place you could then setup a tool to like [Packer
 
 All this together would put you in a good position to implement a successful Continuous Delivery pipeline.
 
-The example is also availble on [GitHub](http://github.com/peterabbott/testing.infrastucture) to try for yourself.
-
-
-
-
-
-
-
+The example used in this article uses Chef Solo as the provisioniing tool and Docker as the VM platform, it is availble on [GitHub](http://github.com/peterabbott/testing.infrastucture) for people to try it out themselves.
 
 
