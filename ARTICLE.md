@@ -13,15 +13,15 @@ url="https://kitchen.ci/"
 
 
 
-We have automated testing for software development lifecycle. So why not Infrastrucutre? 
+We have automated testing for Software Development so why not Infrastrucutre? 
 
-With the emmergence of 'Infrastructure as Code' the responsibility of configuring insfrastructure are crossing over to developers, not just the domain of System Administrator. This makes the need to be able to test a change in isolation even more important, before you have the change of brining down an entire environment. 
+With the emmergence of 'Infrastructure as Code' the responsibility of provisioning insfrastructure are no longer just the domain of a System Administrator. This makes the need to be able to test a changes in isolation even more important, bringing down an Infrastructure stack will often have more drastic consequence than a bug in a piece of software.
 
-This is where a tool like [Test Kitchen](http://kitchen.ci/) comes in. It is the glue between the provisioning tools like Chef, Puppet, Ansible; the infrastruction being provisioned like AWS, Docker, VirtualBox; and the tests to validate the setup is correct.
+This is where [Test Kitchen](http://kitchen.ci/) fits in. It is the glue between the provisioning tools like Chef, Puppet, Ansible; the infrastruction being provisioned like AWS, Docker, VirtualBox; and the tests to validate the setup is correct. Traditionally Test Kitchen is used to test single cookbooks or packages, but is easily adapted to test the group of cookbooks that makeup your environment.
 
-The simple concept is that Test Kichen allows you to execute a convergance on a  given platform(s) and then execute a suite of tests to verify the environment has been setup as expected. 
+The concept is that Test Kichen allows you to provision (convergance testing) an environment on a given platform(s) and then execute a suite of tests to verify the environment has been setup as expected. But, as with software, you need to be writing effective tests, not just the "asset(true)" type tests I end up seeing all to often.
 
-This is particularly useful if you want to verify a setup against different OS and/or application versions. This can even be setup as part of your Continuous Integration and/or Delivery Pipelines. It also feeds nicely into the concept of [Immutable Infrastructure](http://www.thoughtworks.com/insights/blog/rethinking-building-cloud-part-4-immutable-servers), which I am a big fan of, but that is a discussion for another time.
+This can be particularly useful if you want to verify a setup against different OS and/or OS package versions. This can even be setup as part of your Continuous Integration and/or Delivery Pipelines. It also feeds nicely into the concept of [Immutable Infrastructure](http://www.thoughtworks.com/insights/blog/rethinking-building-cloud-part-4-immutable-servers), which I am a big fan of, but that is a discussion for another time.
 
 The configuration Test Kitchen is to break the configuration into Driver, Provisioner, Platform and Tests.
 
@@ -45,25 +45,20 @@ suites:
 ``` 
 
 
-The Driver section allows you define what underlying infrastructure you are going to use to launch your environment. The default is Vagrant and VirtualBox, but others like AWS EC2, Docker and Digital Ocean are supported.
+The Driver section allows you define what underlying Virtualisation Platform you are going to use to launch your environment and tests. The default is Vagrant and VirtualBox, but others like AWS EC2, Docker and Digital Ocean are supported.
 
 The Platforms section allows you define the OS versions you want to run on. When using drivers like Docker and Vagrant, Test Kitchen are pretty good at figuring out what containers these map to. Others like AWS require AMI's to know what to launch.
 
+The Provisioner section defines what you want to use to converge the environment. Chef Solo/Zero and Shell Provisioners are the easiest to get started with, but there are provisioners available for the likes of Puppet and Ansible. 
 
-The Provisioner section defines what you want to use to converge the environment. Chef Solo/Zero and Shell Provisioners are provided out-of-the box, but there are provisioners available for the likes of Puppet and Ansible. 
-
-Finally the test section is where the value comes in to play. This is where you define the tests to run against each platform when convergance execution has completed. 
-
+Finally the test section is where the actual value comes in to play. This is where you define the tests to run against each platform when convergance execution has completed. 
 
 
 **Putting it all Together** 
 
-Normally if I were setting up platform, I'd wrap all the recipies into a single wrapper cookbook. This is also known as the [Environment Cookbook Pattern](http://blog.vialstudios.com/the-environment-cookbook-pattern/). While you can use Chef Roles and Environments to manage recipes, I find it much cleaner to use a single wrapper cookbook to define a stack that is used by an application. This approach also makes it far easier to version and feed into different tools (for example Test Kitchen, Packer, Chef Server), instead of maintaining different configuration files for each setup.
+Normally if I were setting up platform, I'd wrap all the recipies into a single wrapper cookbook. This is also known as the [Environment Cookbook Pattern](http://blog.vialstudios.com/the-environment-cookbook-pattern/). While you can use Chef Roles and Environments to manage recipes, I find it much cleaner to use a single wrapper cookbook to define a stack that is used by an application. This approach also makes it far easier to version and feed into different tools (for example Test Kitchen, Packer, Chef Server), instead of maintaining different configuration files for each setup. For this example, the recipe run list and Chef configuration are defined in the Test Kitchen config to make it easier to follow.
 
-For this example, the recipe run list and chef configuration are defined in the Test Kitchen config to make it easier to follow. 
-
-I tend to use Docker to test with as it is much quicker to spin up instances as compared with the default Vagrant and VirtualBox.
-
+I tend to use Docker to test with as it is much quicker to spin up instances as compared with the default Vagrant and VirtualBox. In more complex setups, it is possible to set the driver on a per-test or platform basis to allow you to run against different Virtualisation platforms.
 
 *Sample Test Kitchen Config*
 
@@ -112,9 +107,9 @@ This is where we need to write some tests to verify that everything is in place.
 
 We have all been caught out by a Gem or Cookbook being updated and then having to spend hours trying to figure out why things just stopped working. The update to the Apache cookbook from the default Apache 2.2 to 2.4 is a prime example. Even in putting together a sample for this article I found a couple of bugs and unexcepted behaviours in some of the cookbooks I was using. Also that, very few cookbooks seem to show Centos any love.
 
-With infrastrucuture tests in place, we can pick up these changes sooner in the deployment lifecycle then getting caught with an broken environment that others are reliant on.
+With infrastrucuture tests in place, we can pick up these changes sooner in the deployment lifecycle rather then getting caught with an broken environment that others are reliant on.
 
-The most common tests are [Bats](https://github.com/sstephenson/bats) and [Serverspec](http://serverspec.org/). Bats tests (Bash Tests) are probably easier to get to grips with if just writing simple tests. Serverspec allows you to write more complex test and is better at handling cross-platform tests.
+The most common test frameworks are [Bats](https://github.com/sstephenson/bats) and [Serverspec](http://serverspec.org/). Bats tests (Bash Tests) are probably easier to get to grips with if just writing simple tests. Serverspec allows you to write more complex test and is better at handling cross-platform tests.
 
 A simple Bats testing to verify Java installed.
 
@@ -207,7 +202,7 @@ To make connecting to a Virtual Machine, Test Kitchen provides a login command s
 
 So as we can Test Kitchen can provide a really easy mechanism to test your infrastructure, in particular testing the infrastructure after it has been through your provisioning tool of choice. You spin up or updated environments safe in the knowledge that you wont bring down an environment and have angry users blaming your for a lost environments or an annoyed support team that you broke one of their servers. 
 
-At the very least testing the convergence of any cookbooks you write should always come with a basic Test Kitchen config to verify the cookbook itself. TDD for Infrastructure.
+At the very least testing the convergence of any cookbooks you write should always come with a basic Test Kitchen config to verify the cookbook itself. Think TDD for Infrastructure.
 
 ** What's Next? **
 
