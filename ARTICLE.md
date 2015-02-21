@@ -63,34 +63,25 @@ I tend to use Docker to test with as it is much quicker to spin up instances as 
 ---
 driver:
   name: docker 
-
 provisioner:
   name: chef_solo
 platforms:
   - name: ubuntu-12.04
-    run_list:
-    - "recipe[apt]"
-    - "recipe[java]" 
-    - "recipe[mongodb]"
-    - "recipe[jetty]"
-    - "recipe[tomcat]"
+    driver_config:
+      provision_command:
+        - apt-get update -y
   - name: ubuntu-14.04
-    run_list:
-    - "recipe[apt]"
-    - "recipe[mongodb]"
-    - "recipe[jetty]"
-    - "recipe[tomcat]"    
-    - "recipe[java]" 
   - name: centos-6.4
+    driver_config:
+      provision_command:
+      - yum install -y tar curl
+suites:
+  - name: default
     run_list:
-    - "recipe[yum]"
     - "recipe[mongodb]"
     - "recipe[tomcat]"
     - "recipe[java]"
     - "recipe[apache]"
-
-suites:
-  - name: default
     attributes:
       java:
         install_flavor: openjdk 
@@ -98,7 +89,7 @@ suites:
 
 ```
 
-So now we are able to run Test Kitchen and verify that each of the Chef recipes will execute and converge successfully. But do we actually know that everything is in place and will run once let loose into the wild?
+So now we are able to run Test Kitchen and verify that each of the Chef recipes used to provision our environment will execute successfully. But do we actually know that everything is in place, have the correct Tomcat and Java versions been installed that we expected?
 
 This is where we need to write some tests to verify that everything is in place. We should test things like versions installed, services running, files in the correct place. Tests don't lie.
 
@@ -106,7 +97,7 @@ We have all been caught out by a Gem or Cookbook being updated and then having t
 
 With infrastrucuture tests in place, we can pick up these changes sooner in the deployment lifecycle rather then getting caught with an broken environment that others are reliant on.
 
-The most common test frameworks are [Bats](https://github.com/sstephenson/bats) and [Serverspec](http://serverspec.org/). Bats tests (Bash Tests) are probably easier to get to grips with if just writing simple tests. Serverspec allows you to write more complex test and is better at handling cross-platform tests.
+The easiest to get running is to write simple Bash script tests using [Bats](https://github.com/sstephenson/bats). If you have ever written a Bash script then Bats is easy to get the hang of.
 
 A simple Bats testing to verify Java installed.
 
@@ -121,6 +112,9 @@ A simple Bats testing to verify Java installed.
 	[ "$status" -eq 0 ]
 }
 ```
+
+If you require more complex tests, then [Serverspec](http://serverspec.org/) might be a better fit. Serverspec has a far richer domain for writing platform-agnostic tests. It provides the resoruce for checking things like services are installed, file contents and OS settings. 
+
 
 An example Serverspec Test to verify Java version and required services are installed.
 
@@ -154,7 +148,6 @@ end
 
 
 ```
-
 
 If you were to go down the route of Immutable Infrastructure, then you would start to add application tests to verify that the application is deployed and can run. 
 
