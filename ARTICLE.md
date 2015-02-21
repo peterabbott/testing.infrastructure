@@ -1,4 +1,6 @@
-Infrastructure always has a habit of being the last piece of the deployment puzzle. It is always the part that ends up taking much longer than expected, not matter how many times you've done it before.
+Infrastructure always has a habit of being the last piece of the puzzle. It is always the part that ends up taking much longer than expected, not matter how many times you've done it before.
+
+We have automated testing for Software Development so why not Infrastrucutre? 
 
 {{#data title="Test Kitchen"
 
@@ -11,20 +13,15 @@ url="https://kitchen.ci/"
 {{> definition}}
 {{/data}}
 
-
-
-We have automated testing for Software Development so why not Infrastrucutre? 
-
-With the emmergence of 'Infrastructure as Code' the responsibility of provisioning insfrastructure are no longer just the domain of a System Administrator. This makes the need to be able to test a changes in isolation even more important, bringing down an Infrastructure stack will often have more drastic consequence than a bug in a piece of software.
+With the emmergence of 'Infrastructure as Code', the responsibility of provisioning insfrastructure is no longer just the domain of a System Administrator. This makes the need to be able to test a changes in isolation even more important, bringing down an infrastructure stack will often have more drastic consequence than a bug in a piece of software.
 
 This is where [Test Kitchen](http://kitchen.ci/) fits in. It is the glue between the provisioning tools like Chef, Puppet, Ansible; the infrastruction being provisioned like AWS, Docker, VirtualBox; and the tests to validate the setup is correct. Traditionally Test Kitchen is used to test single cookbooks or packages, but is easily adapted to test the group of cookbooks that makeup your environment.
 
-The concept is that Test Kichen allows you to provision (convergance testing) an environment on a given platform(s) and then execute a suite of tests to verify the environment has been setup as expected. But, as with software, you need to be writing effective tests, not just the "asset(true)" type tests I end up seeing all to often.
+The concept behind Test Kichen is that allows you to provision (convergance testing) an environment on a given platform(s) and then execute a suite of tests to verify the environment has been setup as expected. But, as with software, you need to be writing effective tests, not just the "asset(true)" type tests I end up seeing all to often.
 
 This can be particularly useful if you want to verify a setup against different OS and/or OS package versions. This can even be setup as part of your Continuous Integration and/or Delivery Pipelines. It also feeds nicely into the concept of [Immutable Infrastructure](http://www.thoughtworks.com/insights/blog/rethinking-building-cloud-part-4-immutable-servers), which I am a big fan of, but that is a discussion for another time.
 
 The configuration Test Kitchen is to break the configuration into Driver, Provisioner, Platform and Tests.
-
 
 In this simple example, running test kitchen would launch an Ubunu 14 and using the *apt* cookbook run an `apt update`. 
 
