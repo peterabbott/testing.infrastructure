@@ -1,4 +1,0 @@
-vendor/
-.bundle/
-.kitchen/
-Berksfile.lock
