@@ -13,7 +13,7 @@ url="https://kitchen.ci/"
 {{> definition}}
 {{/data}}
 
-With the emmergence of 'Infrastructure as Code', the responsibility of provisioning insfrastructure is no longer just the domain of a System Administrator. This makes the need to be able to test a changes in isolation even more important, bringing down an infrastructure stack will often have more drastic consequence than a bug in a piece of software.
+With the emmergence of 'Infrastructure as Code', the responsibility of provisioning insfrastructure is no longer just the domain of a System Administrator. This makes the need to test a changes in isolation even more important, bringing down an infrastructure stack will often have more drastic consequence than a bug in a piece of software.
 
 This is where [Test Kitchen](http://kitchen.ci/) fits in. It is the glue between the provisioning tools like Chef, Puppet, Ansible; the infrastruction being provisioned like AWS, Docker, VirtualBox; and the tests to validate the setup is correct. Traditionally Test Kitchen is used to test single cookbooks or packages, but is easily adapted to test the group of cookbooks that makeup your environment.
 
@@ -89,7 +89,7 @@ suites:
 
 ```
 
-So now we are able to run Test Kitchen and verify that each of the Chef recipes used to provision our environment will execute successfully. But do we actually know that everything is in place, have the correct Tomcat and Java versions been installed that we expected?
+Now we are able to run Test Kitchen and verify that each of the Chef recipes used to provision our environment will execute successfully. But do we actually know that everything is in place, have the correct Tomcat and Java versions been installed that we expected?
 
 This is where we need to write some tests to verify that everything is in place. We should test things like versions installed, services running, files in the correct place. Tests don't lie.
 
@@ -114,7 +114,6 @@ A simple Bats testing to verify Java installed.
 ```
 
 If you require more complex tests, then [Serverspec](http://serverspec.org/) might be a better fit. Serverspec has a far richer domain for writing platform-agnostic tests. It provides the resoruce for checking things like services are installed, file contents and OS settings. 
-
 
 An example Serverspec Test to verify Java version and required services are installed.
 
@@ -149,11 +148,11 @@ end
 
 ```
 
-If you were to go down the route of Immutable Infrastructure, then you would start to add application tests to verify that the application is deployed and can run. 
+If applied to Immutable Infrastructure, then you would start to add application tests to verify the entire application setup has been deployed and can run. 
 
 **Running Test Kitchen**
 
-There are two key phases to Test Kichen, converge and verify. 
+There are two key phases to Test Kichen, converge and verify. Converge will provision the Instrastructure and Verify will run the test suites against the Infrastructure.
 
 To start with you can see what tests are available by running `kitchen list`. This will list all the combinations of platforms and tests configured.
 
@@ -186,13 +185,15 @@ kitchen test default  -  run default test suite against all platforms
 kitchen test default-ubuntu-1204  -  run default test suite against Ubuntu 12.04
 ``` 
 
-During testing you might encounter times where tests fail and you can't figure out why. The staged approach of Test Kitchen allows you to runs the convergence and verification stages separately. What this means is that you can login to the generated and (partially) provisioned Virtual Machine to have a poke around. This is particularly useful during initial setup, it allows you to look around and see how things are setup whithout breaking any "real" environments.
+During testing you might encounter times where tests fail and you can't figure out why. The staged approach of Test Kitchen allows you to run the convergence and verification stages separately without tearing down the infrastructure stack. What this means is that you can connect to an environment and its (partially) provisioned setup's to have a poke around. This can be particularly useful during initial setup of a new OS or packages, it allows you to look around and see how things are setup whithout breaking any "real" environments. And if you did break something you can just throw it away and start again.
 
-To make connecting to a Virtual Machine, Test Kitchen provides a login command so you don't have to worry about figuring out ports and ssh keys, it remembers all that for you.
+To make connecting to a provisioned environment easier, Test Kitchen provides a login command so you don't have to worry about figuring out ports and ssh keys, it remembers all that for you.
 
-So as we can Test Kitchen can provide a really easy mechanism to test your infrastructure, in particular testing the infrastructure after it has been through your provisioning tool of choice. You spin up or updated environments safe in the knowledge that you wont bring down an environment and have angry users blaming your for a lost environments or an annoyed support team that you broke one of their servers. 
+So as we can Test Kitchen can provide an easy mechanism to test your infrastructure, in particular testing the infrastructure after it has been through your provisioning tool of choice. You spin up or updated environments safe in the knowledge that you wont bring down an environment and have angry users blaming your for a lost environments or an annoyed support team that you broke one of their servers. 
 
-At the very least testing the convergence of any cookbooks you write should always come with a basic Test Kitchen config to verify the cookbook itself. Think TDD for Infrastructure.
+At the very least, testing the convergence of any setup you create should always come with a basic Test Kitchen config to verify the environment convergence. The next step is to start adding tests to verify your expectations.
+
+Using Test Kitchen should be thought of as TDD for Infrastructure.
 
 ** What's Next? **
 
