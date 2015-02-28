@@ -54,11 +54,10 @@ java-8-centos-65     Docker  ChefSolo     <Not Created>
 
 To start with Test Kitchen you can list the configured test suites.
 
-NOTE: For these examples, if you want to use Docker then prefix `KITCHEN_DRIVER=docker ` to the start of anything
+NOTE: For these examples, if you want to use Docker then prefix `KITCHEN_DRIVER=docker ` when running any of the Test Kitchen commands.
 
 
 ```
 bundle exec kitchen list
 ````
-
 
