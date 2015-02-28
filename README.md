@@ -56,8 +56,50 @@ To start with Test Kitchen you can list the configured test suites.
 
 NOTE: For these examples, if you want to use Docker then prefix `KITCHEN_DRIVER=docker ` when running any of the Test Kitchen commands.
 
-
+**List Tests**
 ```
 bundle exec kitchen list
-````
+```
+
+**Run Single Test**
+
+To run all steps in the process, create, converge, verify and destroy, then you can use the test command.
+
+```
+bundle exec kitchen test default-ubuntu-1404
+```
+
+**Run All Test**
+
+To run all of them (will take a while), just leave off then name regex.
+
+```
+bundle exec kitchen test 
+```
+
+
+**Converge Single Test Setup**
+
+If you just want to create and converge instance(s), you can use the converge command
+
+```
+bundle exec kitchen converge default-ubuntu-1404
+```
+
+**Verify a Single Test Setup**
+
+If you are still working on the setup or configuration it is possible to rerun convergence. Then when you think you have the correct setup you can run the verify command. It is still recommended that as part of any CD process you run the testing from a clean slate. 
+
+
+```
+bundle exec kitchen verify default-ubuntu-1204
+```
+
+** Destroy a Test Setup
+
+If you are finished with a specific instance and want to throw it away or even start again, you can use the destroy command.
+
+```
+bundle exec kitchen destroy default-ubuntu-1204
+```
 
