@@ -106,7 +106,7 @@ If you are still working on the setup or configuration it is possible to rerun c
 bundle exec kitchen verify default-ubuntu-1204
 ```
 
-** Destroy a Test Setup
+**Destroy a Test Setup**
 
 If you are finished with a specific instance and want to throw it away or even start again, you can use the destroy command.
 
