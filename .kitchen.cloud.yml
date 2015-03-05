@@ -1,0 +1,70 @@
+---
+driver:
+  name: ec2
+  aws_access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
+  aws_secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+  aws_ssh_key_id: <%= ENV['AWS_KEYPAIR_NAME'] %>
+  ssh_key: <%= ENV['AWS_KEYPAIR_PATH'] %>
+  region: ap-southeast-2
+  availability_zone: ap-southeast-2a
+  flavor_id: t2.small
+  block_device_mappings:
+    - ebs_device_name: /dev/sda2
+      ebs_volume_size: 10
+      ebs_delete_on_termination: true
+  subnet_id: subnet-cc60a1a9
+  vpc_id: vpc-9414e2f1
+  security_group_ids: ["sg-70559f15"]
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: true
+platforms:
+  - name: ubuntu-14.04
+    driver:
+      image_id: ami-abeb9e91
+    run_list:
+      - "recipe[apt]"
+  - name: ubuntu-12.04
+    driver:
+      image_id: ami-ef3342d5
+    run_list:
+      - "recipe[apt]"
+  - name: debian-7.8
+    driver:
+      image_id: ami-4f770375
+    run_list:
+      - "recipe[apt]"
+  - name: debian-6.0
+    driver:
+      image_id: ami-7bfb9841
+    run_list:
+      - "recipe[apt]"
+  - name: centos-6.5
+    driver:
+      flavor_id: m1.small
+      image_id: ami-e7138ddd
+    run_list:
+      - "recipe[yum]"
+      - "recipe[curl]"
+      - "recipe[tar]"
+suites:
+  - name: default
+    run_list:
+      - "recipe[apache2]"
+      - "recipe[mongodb]"
+      - "recipe[tomcat]"
+      - "recipe[java]" 
+    excludes: 
+      - centos-7
+    attributes:
+      yum:
+        epel-testing:
+          enabled: true
+      java:
+        install_flavor: oracle
+        jdk_version: "7"
+        oracle:
+          accept_oracle_download_terms: true      
+      tomcat:
+        base_version: 7
+        deploy_manager_apps: false
