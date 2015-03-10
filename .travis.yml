@@ -1,7 +1,7 @@
 language: ruby
 bundler_args: "--without kitchen_docker --without development"
 rvm:
-- 2.1.0
+- 2.1.4
 script:
 - bundle exec kitchen test ubuntu-1404
 env:
