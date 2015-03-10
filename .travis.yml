@@ -1,5 +1,8 @@
 language: ruby
-bundler_args: "--without kitchen_docker --without development"
+bundler_args: "--without kitchen_docker --without development --deployment --jobs=3"
+cache:
+  directories:
+  - vendor/bundle
 rvm:
 - 2.1.4
 script:
