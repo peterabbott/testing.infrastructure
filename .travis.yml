@@ -1,4 +1,4 @@
-lanuage: ruby
+language: ruby
 bundler_args: "--without kitchen_docker --without development"
 rvm:
 - 2.1.0
