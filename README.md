@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/peterabbott/testing.infrastructure.svg?branch=cloud)](https://travis-ci.org/peterabbott/testing.infrastructure)
+
 Once you have cloned this project locally, you will need to use bundle to install the dependencies using Bundler.
 
 ## Requirements
