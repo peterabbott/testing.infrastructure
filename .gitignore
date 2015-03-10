@@ -2,3 +2,7 @@ vendor/
 .bundle/
 .kitchen/
 Berksfile.lock
+tk_gcompute
+tk_gcompute.pub
+tk_gcompute.tgz
+*.p12
