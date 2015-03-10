@@ -3,7 +3,7 @@ bundler_args: "--without kitchen_docker --without development"
 rvm:
 - 2.1.4
 script:
-- bundle exec kitchen test ubuntu-1404
+- KITCHEN_YML=.kitchen.cloud.yml bundle exec kitchen test ubuntu-1404
 env:
   global:
   - secure: QoQJbJhuASmBP4djaqPRIG0FxLLC4yyTdcvWy1Qdmq0zTukYi2cRbw+wxg/dko++8Q26VYy12LBGACw1z7Hq3PIY5ASWyJlHV9WTu7daPWcXXdQgUkr7FFUgA1V9IswVyxOIcd3FBopNk98fCRPvCP2N5hJlkPmyxM/kj2YkDqc=
