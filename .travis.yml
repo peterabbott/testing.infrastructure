@@ -27,6 +27,7 @@ before_install:
 - tar xfz tk_gcompute.tgz
 after_success:
 - echo $TEST_SUITE
+- KITCHEN_YAML=.kitchen.cloud.yml bundle exec kitchen list $TEST_SUITE
 after_failure:
 - echo "test: $TEST_SUITE"
 - KITCHEN_YAML=.kitchen.cloud.yml bundle exec kitchen list
