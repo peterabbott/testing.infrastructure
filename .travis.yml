@@ -14,6 +14,11 @@ env:
   - secure: Qsx8sU6akVqQ2WCzUUK9vE0/+RmQ4Rw/efoTYfSTYp3/Cjx/RAorTQrB6EBp9jg+LjPFAS1SZEeMVxnWU5TocaVPoIBECJluKBOnW9xu7s79igk/hKMjR2UN0BacmURxAlojT/yuPXZfeIePVPdsgXKFGcHnBH9J3inGcirZqFY=
   - secure: EvAQy55P7aT8vpWUWKeCQcr2CquuqTSdDk0oUcZQOqf7gKuQhEtWHuAJ6+XREN4NVRtVRyUpnjRylD0Hy0dh3S244GJPu2unBuMK+mlXYRMbIjxs0m0wJQVUjZx/dYyj0hWm6yVCkOo9JN9cDdlCJ17L5FRehuxtRxhjwbAF6Tw=
   - secure: LAAkhijFjCaaEznWCRUR1C5x0Xgtj1taUpVlqwtCEDGewsyhmZrHilb1gn3/DidojCJ/FP4ogVxLt+Zk82l5Rxz9Qbgl9bi5cQP/OAU3eTvFOcPwpO1rd0TMwBLacLTGnETN4V/H8j7i4SJSG+qSD7VMimo23LBtoTppir1spTY=
+  maxtix:
+    - TEST_SUITE=default-ubuntu-1204
+    - TEST_SUITE=default-ubuntu-1404
+    - TEST_SUITE=default-debian-78
+    - TEST_SUITE=default-centos-66
 before_install:
 - openssl aes-256-cbc -K $encrypted_74edefe3cde0_key -iv $encrypted_74edefe3cde0_iv
   -in tk_gcompute.tgz.enc -out tk_gcompute.tgz -d
