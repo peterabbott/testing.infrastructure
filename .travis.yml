@@ -1,5 +1,5 @@
 language: ruby
-bundler_args: "--without kitchen_docker --without development --deployment --jobs=3"
+bundler_args: "--without kitchen_vagrant kitchen_docker development  --deployment --jobs=3"
 cache:
   directories:
   - vendor/bundle
