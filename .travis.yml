@@ -26,12 +26,8 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_74edefe3cde0_key -iv $encrypted_74edefe3cde0_iv
   -in tk_gcompute.tgz.enc -out tk_gcompute.tgz -d
 - tar xfz tk_gcompute.tgz
-after_success:
-- echo $TEST_SUITE
-- KITCHEN_YAML=.kitchen.cloud.yml bundle exec kitchen list $TEST_SUITE
 after_failure:
-- echo "test: $TEST_SUITE"
-- KITCHEN_YAML=.kitchen.cloud.yml bundle exec kitchen list
+- KITCHEN_YAML=.kitchen.cloud.yml bundle exec kitchen destroy $TEST_SUITE 
 notifications:
   slack:
     secure: i9jw1c42dVc/aJqF8Ny1ambqSJmdHiIkSlbubrh5aQEpa1vwM0CSCpTWUJxvnetliNY4M+j135JyCzx/bZtCG7ELEvvH+e8rNRcqSnxo8MfJINZwswk/N59V8GC/WC5RPZxy1F34Coh2VjphTfRzfHVaArfb0la4WElMMa9FAmc=
