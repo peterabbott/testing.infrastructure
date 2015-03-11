@@ -1,6 +1,8 @@
 language: ruby
 bundler_args: "--without kitchen_vagrant kitchen_docker development  --deployment --jobs=3"
+sudo: false
 cache:
+  bundler: true
   directories:
   - vendor/bundle
 rvm:
@@ -26,5 +28,6 @@ before_install:
 after_success:
 - echo $TEST_SUITE
 after_failure:
-- echo $TEST_SUITE
+- echo "test: $TEST_SUITE"
+- KITCHEN_YAML=.kitchen.cloud.yml bundle exec kitchen list
 #-  KITCHEN_YAML=.kitchen.cloud.yml bundle exec kitchen destory $TEST_SUITE
