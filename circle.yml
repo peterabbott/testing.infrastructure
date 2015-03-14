@@ -1,0 +1,17 @@
+## Customize the test machine
+machine:
+  services:
+    - docker
+
+  # Version of ruby to use
+  ruby:
+    version:
+     2.1.4
+
+dependencies:
+  bundler:
+    without: [production,  kitchen_vagrant, kitchen_docker, development  ] 
+
+test:
+  override:
+    - KITCHEN_DRIVER=docker bundle exec kitchen test default-ubuntu-1204
