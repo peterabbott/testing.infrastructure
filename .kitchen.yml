@@ -1,6 +1,7 @@
 ---
 driver:
   name: <%= ENV['KITCHEN_DRIVER'] || 'vagrant' %> # switch between docker and vagrant
+  use_sudo: false
   cap_add: 
     - SYS_PTRACE
 provisioner:
