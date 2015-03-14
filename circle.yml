@@ -10,7 +10,7 @@ machine:
 
 dependencies:
   bundler:
-    without: [production,  kitchen_vagrant, kitchen_docker, development  ] 
+    without: [production,  kitchen_vagrant, kitchen_cloud, development  ] 
 
 test:
   override:
