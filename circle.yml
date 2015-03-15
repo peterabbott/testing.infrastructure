@@ -14,4 +14,6 @@ dependencies:
 
 test:
   override:
-    - KITCHEN_DRIVER=docker bundle exec kitchen test default-ubuntu-1204
+    - KITCHEN_DRIVER=docker bundle exec kitchen list default-ubuntu-1404
+    - KITCHEN_DRIVER=docker bundle exec kitchen test default-ubuntu-1404
+    - KITCHEN_DRIVER=docker bundle exec kitchen list default-ubuntu-1404
