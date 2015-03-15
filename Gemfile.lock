@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/peterabbott/kitchen-docker.git
-  revision: 0180f851f952ac6f55cbbbee4f43e09628bb7fec
+  revision: ef4cc38f46f285e7d16e7b86ca42b1339277c9f8
   branch: bugfix/98
   specs:
     kitchen-docker (1.6.4)
