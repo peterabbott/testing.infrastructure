@@ -31,7 +31,8 @@ end
 
 group :kitchen_docker do
 #  gem 'kitchen-docker', '~> 1.7.0'
-  gem 'kitchen-docker', :git => 'https://github.com/peterabbott/kitchen-docker.git' 
+#  gem 'kitchen-docker', :path => '/Users/piemanpete/Documents/working/personal/kitchen-docker'
+  gem 'kitchen-docker', :git => 'https://github.com/peterabbott/kitchen-docker.git', :branch => 'bugfix/98' 
 end
 
 group :ci do

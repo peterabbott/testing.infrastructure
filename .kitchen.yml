@@ -70,4 +70,4 @@ suites:
       tomcat:
         base_version: 7
         deploy_manager_apps: false
-
+  - name: demo
